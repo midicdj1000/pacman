@@ -543,11 +543,24 @@ unsigned int M=54272L;
 	{0,0,0,0},
 	{0,0,0,0},
 	{0,0,0,0}
-};	
+};
+
+void drawmap(void){
+ unsigned int dev=0;
+
+  for(dev=0;dev<960;dev++){
+    POKE(1024+spritebase+dev+40,mapData[dev]);
+  } 
+
+}  
+
+
 
 void rasterWait(unsigned char line) {
   while (VIC.rasterline < line) ;
 }
+
+
 void bigpause(void){
  int loop=0;
   int Xcount=0;
@@ -712,7 +725,13 @@ switch (lifes){
 }	
 
 
-  
+static void stopmusic(void){
+short int Xcount=0;
+  for(Xcount=0;Xcount<24;Xcount++){
+    POKE(M+Xcount,0);
+  }   
+
+}  
 
 
 
@@ -816,7 +835,7 @@ static void ghostmove(int TX,int TY,int GINDEX,int mmode)
 	GDOORS[2]=1;
 	GDOORS[3]=1;
 	GDOORS[4]=0;
-	if (MAP[GY[GINDEX]-1][GX[GINDEX]]!=160){
+	if (MAP[GY[GINDEX]-1][GX[GINDEX]]!=160){ // check exits at the location of the current ghost
 		GDOORS[0]=1;
 		GDOORS[4]+=1;
 	}	
@@ -832,276 +851,274 @@ static void ghostmove(int TX,int TY,int GINDEX,int mmode)
 		GDOORS[3]=1;
 		GDOORS[4]+=8;
 	}	
-	if ((GXI[GINDEX]==0) && (GYI[GINDEX]==0)){
+	if ((GXI[GINDEX]==0) && (GYI[GINDEX]==0)){ // is ghost at the start of a square
 		
-	GMOVE[0]=999;GMOVE[1]=999;GMOVE[2]=999;GMOVE[3]=999;
+              GMOVE[0]=999;GMOVE[1]=999;GMOVE[2]=999;GMOVE[3]=999;				// set exits to 999
+              GHOSTANIM[GINDEX]++;
+              if (GHOSTANIM[GINDEX]>spritestart+10) GHOSTANIM[GINDEX]=spritestart+9;		// ghost animation
 
-	GHOSTANIM[GINDEX]++;
-	if (GHOSTANIM[GINDEX]>spritestart+10) GHOSTANIM[GINDEX]=spritestart+9;
+              if (GDIR[GINDEX]==0){   								// ghost facing up
+                if (GDOORS[4]==5){
+                  GMOVE[2]=999;
+                  GMOVE[0]=0;
+                }	
+                if (GDOORS[4]==6){
+                  GMOVE[2]=999;
+                  GMOVE[1]=0;
+                }	
+                if (GDOORS[4]==12){
+                  GMOVE[2]=999;
+                  GMOVE[3]=0;
+                }	
+                if (GDOORS[4]==14){
+                  GMOVE[2]=999;
+                  GMOVE[3]=1;
+                  GMOVE[1]=1;
+                }	
+                if (GDOORS[4]==7) {
+                  GMOVE[2]=999;	
+                  GMOVE[0]=1;
+                  GMOVE[1]=1;
+                }	
+                if (GDOORS[4]==13){
+                  GMOVE[2]=999;				
+                  GMOVE[0]=1;
+                  GMOVE[3]=1;
+                }	
+                if (GDOORS[4]==15){ 
+                  GMOVE[2]=999;				
+                  GMOVE[0]=1;
+                  GMOVE[1]=1;
+                  GMOVE[3]=1;	
+                }	
+              }
+              if (GDIR[GINDEX]==1){								// ghost facing right
+                if (GDOORS[4]==10) {
+                  GMOVE[3]=999;
+                  GMOVE[1]=0;
+                }	
+                if (GDOORS[4]==12){
+                  GMOVE[3]=999;
+                  GMOVE[2]=0;
+                }	
+                if (GDOORS[4]==9){
+                  GMOVE[3]=999;
+                  GMOVE[0]=0;
+                }	
+                if (GDOORS[4]==11){
+                  GMOVE[3]=999;	
+                  GMOVE[0]=1;
+                  GMOVE[1]=1;
+                }	
+                if (GDOORS[4]==13){
+                  GMOVE[3]=999;
+                  GMOVE[0]=1;
+                  GMOVE[2]=1;				
+                }	
+                if (GDOORS[4]==15){
+                  GMOVE[3]=999;
+                  GMOVE[0]=1;
+                  GMOVE[1]=1;
+                  GMOVE[2]=1;	
+                }	
+                if (GDOORS[4]==14){
+                  GMOVE[3]=999;
+                  GMOVE[1]=1;
+                  GMOVE[2]=1;	
+                }
+                if(GDOORS[4]==8){
+                  GMOVE[3]=0;				
+                }				
 
-	if (GDIR[GINDEX]==0){
-			if (GDOORS[4]==5){
-				GMOVE[2]=999;
-				GMOVE[0]=0;
-			}	
-			if (GDOORS[4]==6){
-				GMOVE[2]=999;
-				GMOVE[1]=0;
-			}	
-			if (GDOORS[4]==12){
-				GMOVE[2]=999;
-				GMOVE[3]=0;
-			}	
-			if (GDOORS[4]==14){
-				GMOVE[2]=999;
-				GMOVE[3]=1;
-				GMOVE[1]=1;
-			}	
-			if (GDOORS[4]==7) {
-				GMOVE[2]=999;	
-				GMOVE[0]=1;
-				GMOVE[1]=1;
-			}	
-			if (GDOORS[4]==13){
-				GMOVE[2]=999;				
-				GMOVE[0]=1;
-				GMOVE[3]=1;
-			}	
-			if (GDOORS[4]==15){ 
-				GMOVE[2]=999;				
-				GMOVE[0]=1;
-				GMOVE[1]=1;
-				GMOVE[3]=1;	
-			}	
-	}
-	if (GDIR[GINDEX]==1){
-			if (GDOORS[4]==10) {
-				GMOVE[3]=999;
-				GMOVE[1]=0;
-			}	
-			if (GDOORS[4]==12){
-				GMOVE[3]=999;
-				GMOVE[2]=0;
-			}	
-			if (GDOORS[4]==9){
-				GMOVE[3]=999;
-				GMOVE[0]=0;
-			}	
-			if (GDOORS[4]==11){
-				GMOVE[3]=999;	
-				GMOVE[0]=1;
-				GMOVE[1]=1;
-			}	
-			if (GDOORS[4]==13){
-				GMOVE[3]=999;
-				GMOVE[0]=1;
-				GMOVE[2]=1;				
-			}	
-			if (GDOORS[4]==15){
-				GMOVE[3]=999;
-				GMOVE[0]=1;
-				GMOVE[1]=1;
-				GMOVE[2]=1;	
-			}	
-			if (GDOORS[4]==14){
-				GMOVE[3]=999;
-				GMOVE[1]=1;
-				GMOVE[2]=1;	
-			}
-			if(GDOORS[4]==8){
-				GMOVE[3]=0;				
-			}				
-			
-	}
-	if (GDIR[GINDEX]==2){
-			if (GDOORS[4]==9){
-				GMOVE[0]=999;
-				GMOVE[3]=0;
-			}
-			if (GDOORS[4]==3) {
-				GMOVE[1]=0;
-				GMOVE[0]=999;
-			}	
-			if (GDOORS[4]==11){
-				GMOVE[0]=999;
-				GMOVE[1]=1;
-				GMOVE[3]=1;	
-			}	
-			if (GDOORS[4]==14){
-				GMOVE[3]=999;
-				GMOVE[1]=1;
-				GMOVE[3]=1;
-			}	
-			if (GDOORS[4]==7){
-				GMOVE[0]=999;	
-				GMOVE[1]=1;
-				GMOVE[2]=1;	
-			}	
-			if (GDOORS[4]==13){
-				GMOVE[0]=999;
-				GMOVE[2]=1;
-				GMOVE[3]=1;	
-			}	
-			if (GDOORS[4]==15){
-				GMOVE[0]=999;
-				GMOVE[1]=1;
-				GMOVE[2]=1;
-				GMOVE[3]=1;	
-			}
-			if (GDOORS[4]==5){
-				GMOVE[0]=999;
-				GMOVE[2]=0;
-			}			
-	}
-	if (GDIR[GINDEX]==3){
-			if (GDOORS[4]==10){
-				GMOVE[1]=999;
-				GMOVE[3]=0;
-			}	
-			if (GDOORS[4]==6){
-				GMOVE[1]=999;
-				GMOVE[2]=0;
-			}
-			if (GDOORS[4]==3){
-				GMOVE[1]=999;		
-				GMOVE[0]=0;					
-			}	
-			if (GDOORS[4]==11){
-				GMOVE[1]=999;
-				GMOVE[0]=1;
-				GMOVE[3]=1;	
-			}	
-			if (GDOORS[4]==14){
-				GMOVE[1]=999;	
-				GMOVE[2]=1;
-				GMOVE[3]=1;
-			}	
-			if (GDOORS[4]==7){
-				GMOVE[1]=999;
-				GMOVE[2]=1;
-				GMOVE[0]=1;	
-			}	
-			if (GDOORS[4]==15){
-				GMOVE[1]=999;
-				GMOVE[0]=1;
-				GMOVE[2]=1;
-				GMOVE[3]=1;	
-			}
-			if (GDOORS[4]==2){
-				GMOVE[1]=0;
-			}		
-	}
-	if (mmode==0){
-	if(GMOVE[0]==1) GMOVE[0]=sqdist(GX[GINDEX],GY[GINDEX]-1,TX,TY);
-	if(GMOVE[1]==1) GMOVE[1]=sqdist(GX[GINDEX]+1,GY[GINDEX],TX,TY);
-	if(GMOVE[2]==1) GMOVE[2]=sqdist(GX[GINDEX],GY[GINDEX]+1,TX,TY);
-	if(GMOVE[3]==1) GMOVE[3]=sqdist(GX[GINDEX]-1,GY[GINDEX],TX,TY);
-	}
-	if (mmode==1){
-		srand(PEEK(1));
-		if(GMOVE[0]==1) GMOVE[0]=(rand()% 997)+1;
-		if(GMOVE[1]==1) GMOVE[1]=(rand()% 997)+1;
-		if(GMOVE[2]==1) GMOVE[2]=(rand()% 997)+1;
-		if(GMOVE[3]==1) GMOVE[3]=(rand()% 997)+1;
-	}	
-	templ=9999;
-	tempg=5;
-	for (n=0;n<4;n++){
-		if (GMOVE[n]<templ){
-			templ=GMOVE[n];
-			tempg=n;
-		}	
-	}
-	GDIR[GINDEX]=tempg;
+              }
+              if (GDIR[GINDEX]==2){								// ghost facing down
+                if (GDOORS[4]==9){
+                  GMOVE[0]=999;
+                  GMOVE[3]=0;
+                }
+                if (GDOORS[4]==3) {
+                  GMOVE[1]=0;
+                  GMOVE[0]=999;
+                }	
+                if (GDOORS[4]==11){
+                  GMOVE[0]=999;
+                  GMOVE[1]=1;
+                  GMOVE[3]=1;	
+                }	
+                if (GDOORS[4]==14){
+                  GMOVE[3]=999;
+                  GMOVE[1]=1;
+                  GMOVE[3]=1;
+                }	
+                if (GDOORS[4]==7){
+                  GMOVE[0]=999;	
+                  GMOVE[1]=1;
+                  GMOVE[2]=1;	
+                }	
+                if (GDOORS[4]==13){
+                  GMOVE[0]=999;
+                  GMOVE[2]=1;
+                  GMOVE[3]=1;	
+                }	
+                if (GDOORS[4]==15){
+                  GMOVE[0]=999;
+                  GMOVE[1]=1;
+                  GMOVE[2]=1;
+                  GMOVE[3]=1;	
+                }
+                if (GDOORS[4]==5){
+                  GMOVE[0]=999;
+                  GMOVE[2]=0;
+                }			
+              }
+              if (GDIR[GINDEX]==3){								// ghost facing left
+                if (GDOORS[4]==10){
+                  GMOVE[1]=999;
+                  GMOVE[3]=0;
+                }	
+                if (GDOORS[4]==6){
+                  GMOVE[1]=999;
+                  GMOVE[2]=0;
+                }
+                if (GDOORS[4]==3){
+                  GMOVE[1]=999;		
+                  GMOVE[0]=0;					
+                }	
+                if (GDOORS[4]==11){
+                  GMOVE[1]=999;
+                  GMOVE[0]=1;
+                  GMOVE[3]=1;	
+                }	
+                if (GDOORS[4]==14){
+                  GMOVE[1]=999;	
+                  GMOVE[2]=1;
+                  GMOVE[3]=1;
+                }	
+                if (GDOORS[4]==7){
+                  GMOVE[1]=999;
+                  GMOVE[2]=1;
+                  GMOVE[0]=1;	
+                }	
+                if (GDOORS[4]==15){
+                  GMOVE[1]=999;
+                  GMOVE[0]=1;
+                  GMOVE[2]=1;
+                  GMOVE[3]=1;	
+                }
+                if (GDOORS[4]==2){
+                  GMOVE[1]=0;
+                }		
+              }
+              if (mmode==0){								// mode 0 = pythag
+                if(GMOVE[0]==1) GMOVE[0]=sqdist(GX[GINDEX],GY[GINDEX]-1,TX,TY);
+                if(GMOVE[1]==1) GMOVE[1]=sqdist(GX[GINDEX]+1,GY[GINDEX],TX,TY);
+                if(GMOVE[2]==1) GMOVE[2]=sqdist(GX[GINDEX],GY[GINDEX]+1,TX,TY);
+                if(GMOVE[3]==1) GMOVE[3]=sqdist(GX[GINDEX]-1,GY[GINDEX],TX,TY);
+              }
+              if (mmode==1){								// mode 1 = random (does nto work)
+                      srand(PEEK(1));
+                      if(GMOVE[0]==1) GMOVE[0]=(rand()% 997)+1;
+                      if(GMOVE[1]==1) GMOVE[1]=(rand()% 997)+1;
+                      if(GMOVE[2]==1) GMOVE[2]=(rand()% 997)+1;
+                      if(GMOVE[3]==1) GMOVE[3]=(rand()% 997)+1;
+              }	
+              templ=9999;
+              tempg=5;
+              for (n=0;n<4;n++){						// sort resuslts to find the shortest 
+                  if (GMOVE[n]<templ){
+                    templ=GMOVE[n];
+                    tempg=n;
+                  }	
+              }
+              GDIR[GINDEX]=tempg;
 	}
 
-	if(GMODE[GINDEX]==3){
-		if((GX[GINDEX]==14)&&(GY[GINDEX]==7)){
-				GX[GINDEX]=14;
-				GY[GINDEX]=10;
-				GGX[GINDEX]=(GX[GINDEX]*8)+20; // draw ghost
-				GGY[GINDEX]=(GY[GINDEX]*8)+56;		
-				GMODE[GINDEX]=1;
-				GDIR[GINDEX]=1;
-				GINC[GINDEX]=1;
-				POKE(V+ghostcol[GINDEX],3+GINDEX);
-		GXI[GINDEX]=0;
-		GYI[GINDEX]=0;
-				switch(GINDEX){
-					case 0:
-						POKE(53269L,PEEK(53269L)|8);
-					break;
-					case 1:
-						POKE(53269L,PEEK(53269L)|16);
-					break;
-					case 2:
-						POKE(53269L,PEEK(53269L)|32);					
-					break;
-				}	
-				
-		}		
+	if(GMODE[GINDEX]==3){							// if ghost mode = 3 go home
+            if((GX[GINDEX]==14)&&(GY[GINDEX]==7)){				// ghost lands on home door	
+                GX[GINDEX]=14;
+                GY[GINDEX]=10;
+                GGX[GINDEX]=(GX[GINDEX]*8)+20; // draw ghost
+                GGY[GINDEX]=(GY[GINDEX]*8)+56;					// set ghost location in home
+                GMODE[GINDEX]=1;						// set ghost mode
+                GDIR[GINDEX]=1;							// set ghost direction
+                GINC[GINDEX]=1;							// set ghost speec
+                POKE(V+ghostcol[GINDEX],3+GINDEX);				// set ghost colour
+                GXI[GINDEX]=0;							// set ghost offset indexz
+                GYI[GINDEX]=0;
+                switch(GINDEX){							// turn body back on
+                  case 0:
+                    POKE(53269L,PEEK(53269L)|8);
+                    break;
+                  case 1:
+                    POKE(53269L,PEEK(53269L)|16);
+                    break;
+                  case 2:
+                    POKE(53269L,PEEK(53269L)|32);					
+                    break;
+                }	
+            }		
 	}		
-	if (GDIR[GINDEX]==0){
-		if (MAP[GY[GINDEX]-1][GX[GINDEX]]!=160){
-			GYI[GINDEX]+=GINC[GINDEX];
-			GGY[GINDEX]-=GINC[GINDEX];
-			if (GYI[GINDEX]>7){
-				GYI[GINDEX]=0;
-				GY[GINDEX]--;
-				if(GMODE[GINDEX]!=2){
-					EYEANIM[GINDEX]=spritestart+11;			
-				} else {
-					EYEANIM[GINDEX]=GHOSTANIM[GINDEX]+6;
-				}		
-			}	
-		}
+	if (GDIR[GINDEX]==0){					// ghost facing up
+          if (MAP[GY[GINDEX]-1][GX[GINDEX]]!=160){		// not a wall
+            GYI[GINDEX]+=GINC[GINDEX];				// inc position offset
+            GGY[GINDEX]-=GINC[GINDEX];				// dec Y drawing of sprite
+            if (GYI[GINDEX]>7){					// if position offset > 7 sprite has moved cell
+              GYI[GINDEX]=0;					// reset inc	
+              GY[GINDEX]--;					// move cell up
+              if(GMODE[GINDEX]!=2){				// animate eyes to direction
+                EYEANIM[GINDEX]=spritestart+11;			
+              } else {
+                EYEANIM[GINDEX]=GHOSTANIM[GINDEX]+6;
+              }		
+            }	
+          }
 	}	
 	if (GDIR[GINDEX]==1){
-		if (MAP[GY[GINDEX]][GX[GINDEX]+1]!=160){
-			GXI[GINDEX]+=GINC[GINDEX];
-			GGX[GINDEX]+=GINC[GINDEX];
-			if (GXI[GINDEX]>7){
-				GXI[GINDEX]=0;
-				GX[GINDEX]++;			
-				if(GMODE[GINDEX]!=2){
-					EYEANIM[GINDEX]=spritestart+12;			
-				} else {
-					EYEANIM[GINDEX]=GHOSTANIM[GINDEX]+6;
-				}
-			}		
-		}
+          if (MAP[GY[GINDEX]][GX[GINDEX]+1]!=160){
+            GXI[GINDEX]+=GINC[GINDEX];
+            GGX[GINDEX]+=GINC[GINDEX];
+            if (GXI[GINDEX]>7){
+              GXI[GINDEX]=0;
+              GX[GINDEX]++;			
+              if(GMODE[GINDEX]!=2){
+                EYEANIM[GINDEX]=spritestart+12;			
+              } else {
+                EYEANIM[GINDEX]=GHOSTANIM[GINDEX]+6;
+              }
+            }		
+          }
 	}	
 	if (GDIR[GINDEX]==2){
-		if (MAP[GY[GINDEX]+1][GX[GINDEX]]!=160){
-			GYI[GINDEX]+=GINC[GINDEX];
-			GGY[GINDEX]+=GINC[GINDEX];
-			if (GYI[GINDEX]>7){
-				GYI[GINDEX]=0;
-				GY[GINDEX]++;			
-				if(GMODE[GINDEX]!=2){
-					EYEANIM[GINDEX]=spritestart+13;			
-				} else {
-					EYEANIM[GINDEX]=GHOSTANIM[GINDEX]+6;
-				}
-			}		
-		}
+          if (MAP[GY[GINDEX]+1][GX[GINDEX]]!=160){
+            GYI[GINDEX]+=GINC[GINDEX];
+            GGY[GINDEX]+=GINC[GINDEX];
+            if (GYI[GINDEX]>7){
+              GYI[GINDEX]=0;
+              GY[GINDEX]++;			
+              if(GMODE[GINDEX]!=2){
+                EYEANIM[GINDEX]=spritestart+13;			
+              } else {
+                EYEANIM[GINDEX]=GHOSTANIM[GINDEX]+6;
+              }
+            }		
+          }
 	}	
 	if (GDIR[GINDEX]==3){
-		if (MAP[GY[GINDEX]][GX[GINDEX]-1]!=160){
-			GXI[GINDEX]+=GINC[GINDEX];
-			GGX[GINDEX]-=GINC[GINDEX];
-			if (GXI[GINDEX]>7){
-				GXI[GINDEX]=0;
-				GX[GINDEX]--;			
-				if(GMODE[GINDEX]!=2){
-					EYEANIM[GINDEX]=spritestart+14;			
-				} else {
-					EYEANIM[GINDEX]=GHOSTANIM[GINDEX]+6;
-				}	
-			}	
-		}
+          if (MAP[GY[GINDEX]][GX[GINDEX]-1]!=160){
+            GXI[GINDEX]+=GINC[GINDEX];
+            GGX[GINDEX]-=GINC[GINDEX];
+            if (GXI[GINDEX]>7){
+              GXI[GINDEX]=0;
+              GX[GINDEX]--;			
+              if(GMODE[GINDEX]!=2){
+                EYEANIM[GINDEX]=spritestart+14;			
+              } else {
+                EYEANIM[GINDEX]=GHOSTANIM[GINDEX]+6;
+              }	
+            }	
+          }
 	}
-          if(GDIR[GINDEX]==1){
+          if(GDIR[GINDEX]==1){								// if ghost goes in right tunnle
             if((GX[GINDEX]==27)&&(GY[GINDEX]==10)){
               GX[GINDEX]=1;
  					GGX[GINDEX]=(GX[GINDEX]*8)+20;
@@ -1363,9 +1380,10 @@ short int dotscol[2]={7,0};
 short int pacsound=0;
 short int flash=1;
 	unsigned int SSTART=1024;
-	//signed int JOYADDR=56321L; // port 1
-	unsigned int JOYADDR=56320L; // port 2  
+	unsigned int JOYADDR=56321L; // port 1
+	unsigned int JOYADDR2=56320L; // port 2  
 	short int JOYREAD=0;
+	short int JOYREAD2=0;  
 	short int JOYEX=0;
 	unsigned int score=0;
   	unsigned int tempscore=0;
@@ -1491,10 +1509,17 @@ short int tempsprite=0;
     POKE(charload+spritebase+dev,charData[dev]);
   } 
   
+ 
+  
   POKE(53272L,(PEEK(53272L)&240)+12); // set charatcer set 12288 
-  for(dev=0;dev<960;dev++){
-    POKE(1024+spritebase+dev+40,mapData[dev]);
-  } 
+  
+
+  
+  
+  
+  //for(dev=0;dev<960;dev++){
+  //  POKE(1024+spritebase+dev+40,mapData[dev]);
+  //} 
   
 
 	
@@ -1547,12 +1572,16 @@ POKE(V+cherrycol,CWHITE);
  } 
   
 
- printstatus(1); 
+ //printstatus(1); 
   
- paclife=3;
+ paclife=0;
+ drawlife(3);
+  drawmap();  
  drawdots(7);
- drawlife(paclife); 
-startmusic();
+  
+
+  
+//startmusic();
 pacsound=1;
 
 POKE(M+14,140);  // voice 3 frequancy
@@ -1568,110 +1597,114 @@ POKE(M+4,65);   // voice 1 wave square
  sectemp=0; 
   
   
- printstatus(0); 
+ //printstatus(0); 
 	
 while (JOYEX==0){
 	if(paclife!=0){
 		
-if(pacsound!=0){
-	if(pacsound==1){
-POKE(M+14,140);  // voice 3 frequancy
-POKE(M+18,16);  // voice 3 wave
-POKE(M+24,143); // set volume and turn off voice 3
-POKE(M+3,0);	// voice 1 pwn hi
-POKE(M+2,192);  // voice 1 pwn low
-POKE(M+6,240);  // voice 1 sr
-POKE(M+5,15);   // voice 1 ad
-POKE(M+4,65);   // voice 1 wave square
-	}		
-	FQ=store[pacsound-1];
-	HF=(FQ/256);
-	LF=FQ-(HF*256);
-	//store[T]=FQ;
-	POKE(M,LF);
-	POKE(M+1,HF);
-	pacsound+=2;
-	if(pacsound>9){
-		pacsound=0;
-		POKE(M+4,64);
-	}	
-}
+// make waka waka sound
+          
+          if(pacsound!=0){
+                  if(pacsound==1){
+                    POKE(M+14,140);  // voice 3 frequancy
+                    POKE(M+18,16);  // voice 3 wave
+                    POKE(M+24,143); // set volume and turn off voice 3
+                    POKE(M+3,0);	// voice 1 pwn hi
+                    POKE(M+2,192);  // voice 1 pwn low
+                    POKE(M+6,240);  // voice 1 sr
+                    POKE(M+5,15);   // voice 1 ad
+                    POKE(M+4,65);   // voice 1 wave square
+                  }		
+                  FQ=store[pacsound-1];
+                  HF=(FQ/256);
+                  LF=FQ-(HF*256);
+                  //store[T]=FQ;
+                  POKE(M,LF);
+                  POKE(M+1,HF);
+                  pacsound+=2;
+                  if(pacsound>9){
+                          pacsound=0;
+                          POKE(M+4,64);
+                  }	
+          }
 		
 		
-		
+// check ghost mode		
 
-for(Xcount=0;Xcount<3;Xcount++){
-	if (GMODE[Xcount]==2){
-		gtimer[Xcount]++;
-          	if (gtimer[Xcount]>250){
-                  
-                  if(gtimer[Xcount] %2==0){
-                  	POKE(V+ghostcol[Xcount],6);
-                  } else {
-                   	POKE(V+ghostcol[Xcount],1);                   
-                  } 
-                } 
-		if (gtimer[Xcount]>300){
-			gtimer[Xcount]=0;
-			GMODE[Xcount]=TGMODE[Xcount];
-			//GDIR[xcount]=1;
-			GINC[Xcount]=2;
-			POKE(V+ghostcol[Xcount],3+Xcount);
-                  bonuscount=0;
-			switch(Xcount){
-				case 0:
-					POKE(53269L,PEEK(53269L)|8);
-				break;
-				case 1:
-					POKE(53269L,PEEK(53269L)|16);
-				break;
-				case 2:
-					POKE(53269L,PEEK(53269L)|32);					
-				break;
-			}
-		}
-	}
-}	
+          for(Xcount=0;Xcount<3;Xcount++){
+                  if (GMODE[Xcount]==2){
+                          gtimer[Xcount]++;
+                          if (gtimer[Xcount]>250){
 
-	
+                            if(gtimer[Xcount] %2==0){
+                                  POKE(V+ghostcol[Xcount],6);
+                            } else {
+                                  POKE(V+ghostcol[Xcount],1);                   
+                            } 
+                          } 
+                          if (gtimer[Xcount]>300){
+                                  gtimer[Xcount]=0;
+                                  GMODE[Xcount]=TGMODE[Xcount];
+                                  //GDIR[xcount]=1;
+                                  GINC[Xcount]=2;
+                                  POKE(V+ghostcol[Xcount],3+Xcount);
+                            bonuscount=0;
+                                  switch(Xcount){
+                                          case 0:
+                                                  POKE(53269L,PEEK(53269L)|8);
+                                          break;
+                                          case 1:
+                                                  POKE(53269L,PEEK(53269L)|16);
+                                          break;
+                                          case 2:
+                                                  POKE(53269L,PEEK(53269L)|32);					
+                                          break;
+                                  }
+                          }
+                  }
+          }	
+
+// read joystick
+          
+          
 	JOYREAD=0;	
 	JOYREAD=PEEK(JOYADDR); // check joystick	
 
-	if ((PXI==0)&&(PYI==0)){ // is pacman on 0 - 0 of a quare ?
-		if (MAP[PY][PX]==46){ // check for points
-			MAP[PY][PX]=99;
-			scrchr=colram+(PY*40)+(PX);
+ // check pacman collisions    and set ghost modes     
+	
+          if ((PXI==0)&&(PYI==0)){ 			// is pacman on 0 - 0 of a quare ?
+		if (MAP[PY][PX]==46){ 			// check for points
+			MAP[PY][PX]=99; 		// set dot to 99 so it can be reset later
+			scrchr=colram+(PY*40)+(PX); 	// change colour ram to black
 			POKE(scrchr,0);		
-			score+=10;
-			dots++;
-
-                  printscore(score,2);
-			if(pacsound==0)	pacsound=1;
+			score+=10; 			// inc score
+			dots++; 			// 
+                  	printscore(score,2);		// print score
+			if(pacsound==0)	pacsound=1;	// if it's not making the waka sound start
 		}
-		if (MAP[PY][PX]==47){ // check for power pill
-			score+=50;
-			dots++;
-	
-	
-			MAP[PY][PX]=100;
-			scrchr=colram+(PY*40)+(PX);
+
+            	if (MAP[PY][PX]==47){ 			// check for power pill
+			score+=50;			// increase score
+			dots++;				// increase dots
+			MAP[PY][PX]=100;		// set dots to 100 so it can be reset
+			scrchr=colram+(PY*40)+(PX);	// set colour to 0
 			POKE(scrchr,0);	
-			POKE(V+ghostcol[0],6);
+			POKE(V+ghostcol[0],6);		// set all ghosts to black
 			POKE(V+ghostcol[1],6);
 			POKE(V+ghostcol[2],6);
-			TGMODE[0]=GMODE[0];
+			TGMODE[0]=GMODE[0];		// backup the current ghost mode	
 			TGMODE[1]=GMODE[1];
 			TGMODE[2]=GMODE[2];			
-			GMODE[0]=2;// blue slow
+			GMODE[0]=2;// blue slow		// set ghost mode to eyes
 			GMODE[1]=2;// blue slow
 			GMODE[2]=2;// blue slow
-			GINC[0]=1;
+			GINC[0]=1;			// set ghost speed to 1
 			GINC[1]=1;
 			GINC[2]=1;
-			gtimer[0]=0;
+			gtimer[0]=0;			// set scared timer to 0
 			gtimer[1]=0;
 			gtimer[2]=0;
-			POKE(53269L,255);
+			POKE(53269L,255);		// display all sprites ?
 			if(pacsound==0)	pacsound=1;
 			//GINC[0]=1;
 			//GINC[1]=1;
@@ -1734,6 +1767,11 @@ for(Xcount=0;Xcount<3;Xcount++){
 			GYI[2]=0;
 		}		
                 }
+            
+            
+// read joystick inputs            
+            
+            
 		if ((JOYREAD&JUP)==JOYREAD ){// UP
 			if (MAP[PY-1][PX]!=160){
 				PDIR=0;
@@ -1759,7 +1797,13 @@ for(Xcount=0;Xcount<3;Xcount++){
 			}	
 		}
 	}
+          
+          
+// check if all dots are cleared          
+          
+          
         if (dots==206){
+          stopmusic();          
           hiscore=score;
           printstatus(1); 
           deadanim=0;
@@ -1784,32 +1828,32 @@ for(Xcount=0;Xcount<3;Xcount++){
 
 	
 	
-	
+// pacmode 0 = normal pacman move 	
 	
 	if(pacmode==0){
-		if((PX==GX[0])&&(PY==GY[0])){
-			if(GMODE[0]==0){
-				pacmode=1;	
-				deadanim=0;
+		if((PX==GX[0])&&(PY==GY[0])){ 			// ghost 0 collided gmode 0 = not blue
+			if(GMODE[0]==0){			// normal pacman
+				pacmode=1;			// set pacman = dead
+				deadanim=0;			// start dead anim
 	
 			}
-			if(GMODE[0]==2) {
-				GMODE[0]=3;
-				GINC[0]=2;				
-				POKE(53269L,PEEK(53269L)&247);
+			if(GMODE[0]==2) {			// gmode 2 = blue
+				GMODE[0]=3;			// set gmode 3 go ghome
+				GINC[0]=2;			// set return homer speed	
+				POKE(53269L,PEEK(53269L)&247);  // high ghost body so eyes only
                           
- 			 	POKE(eyesprite[0],spritestart+19+bonuscount);  
-                                bonuscount++;
+ 			 	POKE(eyesprite[0],spritestart+19+bonuscount);  	// display bonus
+                                bonuscount++;					// inc bonus	
                                 if(bonuscount==1)score+=200;
                                 if(bonuscount==2)score+=400;
                                 if(bonuscount==3){
                                   score+=800;
                                   bonuscount=0;
                                 }  
-                                tempsprite=PEEK(V+21);
-                                POKE(V+21,1);
-                                bigpause();
-                                POKE(V+21,tempsprite);                          
+                                tempsprite=PEEK(V+21); 				// store all sprits
+                                POKE(V+21,1);	
+                                bigpause();					// delay need to add ghost dead sfx
+                                POKE(V+21,tempsprite);                          // return sprites to before
 				//POKE(fruitsprite,fcherry);
 				//POKE(V+fruitsx,GGX[0]);
 				//POKE(V+fruitsy,GGY[0]);	
@@ -1991,37 +2035,42 @@ if(MAP[20][26]==47){
 
   
 } else {
-		JOYREAD=0;	
-	JOYREAD=PEEK(JOYADDR); // check joystick	
-	POKE(V+21,0);
-      (void) textcolor (2);
- printstatus(2); 	
-	if ((JOYREAD==239)){ // fire exit
-	hiscore=score;
-          printscore(hiscore,5);
           
-
-		drawlife(paclife); 	
-					deadanim=0;
-					pacmode=0;
-					PACANIM=0;
-					PX=13;
-					PY=17;
-					PGX=(PX*8)+20;
-					PGY=(PY*8)+56;
-					PDIR=3;
-					PXI=0;	
+	JOYREAD=0;
+	JOYREAD2=0;          
+	JOYREAD=PEEK(56321L); // check joystick
+	JOYREAD2=PEEK(56320L); // check joystick  
+	POKE(V+21,0);
+      	(void) textcolor (2);
+ 	printstatus(2); 	
+	if ((JOYREAD==239)||(JOYREAD2==239)){ // fire exit
+          	if(JOYREAD==239){
+                  	JOYADDR=56321l;
+                } else {
+                  	JOYADDR=56320l ;                
+                }  
+		hiscore=score;
+        	printscore(hiscore,5);
+                deadanim=0;
+                pacmode=0;
+                PACANIM=0;
+                PX=13;
+                PY=17;
+                PGX=(PX*8)+20;
+                PGY=(PY*8)+56;
+                PDIR=3;
+                PXI=0;	
 		score=0;
 		dots=0;
 		paclife=3;
 		drawdots(7);
- printstatus(1); 
+		printstatus(1); 
 		drawlife(paclife); 
 		startmusic();
 		resetghost();
 		POKE(V+21,255);
-          level=0;
- printstatus(0); 		
+          	level=0;
+ 		printstatus(0); 		
 	}
 }
   
