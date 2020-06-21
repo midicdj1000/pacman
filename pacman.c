@@ -1700,20 +1700,8 @@ while (JOYEX==0){
               //EYEANIM[2]=16;			
             }
             
-               	if(level>0){     
-			if (dots==20){
-			GMODE[1]=0;
-			TGMODE[1]=0;
-			GINC[1]=2;
-			GDIR[1]=3;
-			GX[1]=14;
-			GY[1]=7;
-			GGX[1]=(GX[1]*8)+20; // draw ghost
-			GGY[1]=(GY[1]*8)+56;
-                        GXI[1]=0;
-                        GYI[1]=0;			
-			
-		}
+     
+
 		if(GMODE[0]==1){
 			GMODE[0]=0;
 			TGMODE[0]=0;			
@@ -1727,7 +1715,7 @@ while (JOYEX==0){
                         GYI[0]=0;			
 		}
 
-		if ((dots>20)&&GMODE[1]==1){
+		if ((dots>40)&&GMODE[1]==1){
 			GMODE[1]=0;
 			TGMODE[1]=0;			
 			GINC[1]=2;
@@ -1739,9 +1727,8 @@ while (JOYEX==0){
 			GXI[1]=0;
 			GYI[1]=0;
 		}
-                }
-          	if (level>2){
-		if ((dots>40)&&(GMODE[2]==1)){
+
+		if ((dots>80)&&(GMODE[2]==1)){
                   	TGMODE[2]=GMODE[2];
 			GMODE[2]=0;
 			TGINC[2]=GINC[2];
@@ -1753,7 +1740,7 @@ while (JOYEX==0){
 			GGY[2]=(GY[2]*8)+56;
 			GXI[2]=0;
 			GYI[2]=0;
-		}		
+
                 }
             
             
@@ -1912,11 +1899,22 @@ while (JOYEX==0){
 	
 	
 	
-          if((sectemp<40)||(sectemp>80)){
-            if(GMODE[0]==0) ghostmove(14,3,0,0);
-            if(GMODE[1]==0) ghostmove(14,20,1,0);
-            if(GMODE[2]==0) ghostmove(14,10,2,0);
+          if((sectemp<40)||(sectemp>80)){			// timer = scatter mode
+            if(GMODE[0]==0) ghostmove(14,3,0,0);		// top section
+            if(GMODE[1]==0) ghostmove(14,20,1,0);		// bottomo section
+            if(GMODE[2]==0) ghostmove(14,10,2,0);		// middle section
+POKE(V+eyecol[0],CWHITE);
+POKE(V+eyecol[1],CWHITE);
+POKE(V+eyecol[2],CWHITE);
+          
           } else {
+            if (GMODE[0]==0) POKE(V+eyecol[0],CYELLOW+flashdot);
+            if (GMODE[1]==0) POKE(V+eyecol[1],CYELLOW+flashdot);
+            if (GMODE[2]==0) POKE(V+eyecol[2],CYELLOW+flashdot);            
+            if (GMODE[0]==2) POKE(V+eyecol[0],CWHITE);
+            if (GMODE[1]==2) POKE(V+eyecol[1],CWHITE);
+            if (GMODE[2]==2) POKE(V+eyecol[2],CWHITE);
+            
             if(PDIR==0) if(GMODE[0]==0) ghostmove(PX,PY-3,0,0);
 
             if(PDIR==1)if(GMODE[0]==0) ghostmove(PX+3,PY,0,0);              
