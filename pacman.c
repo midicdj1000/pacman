@@ -1345,6 +1345,7 @@ unsigned int LF=0;
   POKE(V+21,255);
   
   
+  
 }  
 
 
@@ -1741,9 +1742,10 @@ while (JOYEX==0){
                 }
           	if (level>2){
 		if ((dots>40)&&(GMODE[2]==1)){
+                  	TGMODE[2]=GMODE[2];
 			GMODE[2]=0;
-			TGMODE[2]=0;			
-			GINC[2]=2;
+			TGINC[2]=GINC[2];
+                  	GINC[2]=2;
 			GDIR[2]=3;
 			GX[2]=14;
 			GY[2]=7;
@@ -1758,30 +1760,30 @@ while (JOYEX==0){
 // read joystick inputs            
             
             
-		if ((JOYREAD&JUP)==JOYREAD ){// UP
-			if (MAP[PY-1][PX]!=160){
-				PDIR=0;
-				if(pacmode==2)pacmode=0;
-			}	
-		} 
-		if ((JOYREAD&JRIGHT)==JOYREAD){ // RIGHT
-			if (MAP[PY][PX+1]!=160){
-				PDIR=1;
-				if(pacmode==2)pacmode=0;				
-			}	
-		}
-			if ((JOYREAD&JDOWN)==JOYREAD){ // DOWN
-			if (MAP[PY+1][PX]!=160){
-				PDIR=2;
-				if(pacmode==2)pacmode=0;				
-			}	
-		}	
-		if ((JOYREAD&JLEFT)==JOYREAD){ // LEFT
-			if (MAP[PY][PX-1]!=160){
-				PDIR=3;
-				if(pacmode==2)pacmode=0;				
-			}	
-		}
+            if ((JOYREAD&JUP)==JOYREAD ){// UP
+              if (MAP[PY-1][PX]!=160){
+                PDIR=0;
+                if(pacmode==2)pacmode=0;
+              }	
+            } 
+            if ((JOYREAD&JRIGHT)==JOYREAD){ // RIGHT
+              if (MAP[PY][PX+1]!=160){
+                PDIR=1;
+                if(pacmode==2)pacmode=0;				
+              }	
+            }
+            if ((JOYREAD&JDOWN)==JOYREAD){ // DOWN
+              if (MAP[PY+1][PX]!=160){
+                PDIR=2;
+                if(pacmode==2)pacmode=0;				
+              }	
+            }	
+            if ((JOYREAD&JLEFT)==JOYREAD){ // LEFT
+              if (MAP[PY][PX-1]!=160){
+                PDIR=3;
+                if(pacmode==2)pacmode=0;				
+              }	
+            }
 	}
           
           
@@ -1809,6 +1811,7 @@ while (JOYEX==0){
           dots=0;
           sectemp=0;
           level++;
+          bonuscount=0;
         }	
 
 
@@ -1817,90 +1820,90 @@ while (JOYEX==0){
 // pacmode 0 = normal pacman move 	
 	
 	if(pacmode==0){
-		if((PX==GX[0])&&(PY==GY[0])){ 			// ghost 0 collided gmode 0 = not blue
-			if(GMODE[0]==0){			// normal pacman
-				pacmode=1;			// set pacman = dead
-				deadanim=0;			// start dead anim
-	
-			}
-			if(GMODE[0]==2) {			// gmode 2 = blue
-				GMODE[0]=3;			// set gmode 3 go ghome
-				GINC[0]=2;			// set return homer speed	
-				POKE(53269L,PEEK(53269L)&247);  // high ghost body so eyes only
-                          
- 			 	POKE(eyesprite[0],spritestart+19+bonuscount);  	// display bonus
-                                bonuscount++;					// inc bonus	
-                                if(bonuscount==1)score+=200;
-                                if(bonuscount==2)score+=400;
-                                if(bonuscount==3){
-                                  score+=800;
-                                  bonuscount=0;
-                                }  
-                                tempsprite=PEEK(V+21); 				// store all sprits
-                                POKE(V+21,1);	
-                                bigpause();					// delay need to add ghost dead sfx
-                                POKE(V+21,tempsprite);                          // return sprites to before
-				//POKE(fruitsprite,fcherry);
-				//POKE(V+fruitsx,GGX[0]);
-				//POKE(V+fruitsy,GGY[0]);	
-			}	
-				
-		}
-		if((PX==GX[1])&&(PY==GY[1])){
-			if(GMODE[1]==0){
-				pacmode=1;	
-				deadanim=0;
-					
-			}
-			if(GMODE[1]==2) {
-				GMODE[1]=3;
-				GINC[1]=2;
-				POKE(53269L,PEEK(53269L)&239);
- 				POKE(eyesprite[1],spritestart+19+bonuscount);
-                                bonuscount++;
-                                if(bonuscount==1)score+=200;
-                                if(bonuscount==2)score+=400;
-                                if(bonuscount==3){
-                                  score+=800;
-                                  bonuscount=0;
-                                }  
-                                tempsprite=PEEK(V+21);
-                                POKE(V+21,2);
-                                bigpause();
-                                POKE(V+21,tempsprite);                        
-				//POKE(fruitsprite,fcherry+1);
-				//POKE(V+fruitsx,GGX[1]);
-				//POKE(V+fruitsy,GGY[1]);				
-			}				
-		}
-		if((PX==GX[2])&&(PY==GY[2])){
-			if(GMODE[2]==0){
-				pacmode=1;	
-				deadanim=0;
-			
-			}
-			if(GMODE[2]==2) {
-				GMODE[2]=3;
-				GINC[2]=2;				
-				POKE(53269L,PEEK(53269L)&223);
- 				POKE(eyesprite[2],spritestart+19+bonuscount); 
-                          	bonuscount++;
-                          	if(bonuscount==1)score+=200;
-                          	if(bonuscount==2)score+=400;
-                          	if(bonuscount==3){
-                           	 score+=800;
-                            	bonuscount=0;
-                          	}                        
-                          	tempsprite=PEEK(V+21);
-                          	POKE(V+21,4);
-                          	bigpause();
-                          	POKE(V+21,tempsprite);                        
-                          
-				//POKE(fruitsprite,fcherry=2);
-				//POKE(V+fruitsx,GGX[2]);
-				//POKE(V+fruitsy,GGY[2]);				
-			}				
-		}
+          if((PX==GX[0])&&(PY==GY[0])){ 			// ghost 0 collided gmode 0 = not blue
+            if(GMODE[0]==0){			// normal pacman
+              pacmode=1;			// set pacman = dead
+              deadanim=0;			// start dead anim
+
+            }
+            if(GMODE[0]==2) {			// gmode 2 = blue
+              GMODE[0]=3;			// set gmode 3 go ghome
+              GINC[0]=2;			// set return homer speed	
+              POKE(53269L,PEEK(53269L)&247);  // high ghost body so eyes only
+
+              POKE(eyesprite[0],spritestart+19+bonuscount);  	// display bonus
+              bonuscount++;					// inc bonus	
+              if(bonuscount==1)score+=200;
+              if(bonuscount==2)score+=400;
+              if(bonuscount==3){
+                score+=800;
+                bonuscount=0;
+              }  
+              tempsprite=PEEK(V+21); 				// store all sprits
+              POKE(V+21,1);	
+              bigpause();					// delay need to add ghost dead sfx
+              POKE(V+21,tempsprite);                          // return sprites to before
+              //POKE(fruitsprite,fcherry);
+              //POKE(V+fruitsx,GGX[0]);
+              //POKE(V+fruitsy,GGY[0]);	
+            }	
+
+          }
+          if((PX==GX[1])&&(PY==GY[1])){
+            if(GMODE[1]==0){
+              pacmode=1;	
+              deadanim=0;
+
+            }
+            if(GMODE[1]==2) {
+              GMODE[1]=3;
+              GINC[1]=2;
+              POKE(53269L,PEEK(53269L)&239);
+              POKE(eyesprite[1],spritestart+19+bonuscount);
+              bonuscount++;
+              if(bonuscount==1)score+=200;
+              if(bonuscount==2)score+=400;
+              if(bonuscount==3){
+                score+=800;
+                bonuscount=0;
+              }  
+              tempsprite=PEEK(V+21);
+              POKE(V+21,2);
+              bigpause();
+              POKE(V+21,tempsprite);                        
+              //POKE(fruitsprite,fcherry+1);
+              //POKE(V+fruitsx,GGX[1]);
+              //POKE(V+fruitsy,GGY[1]);				
+            }				
+          }
+          if((PX==GX[2])&&(PY==GY[2])){
+            if(GMODE[2]==0){
+              pacmode=1;	
+              deadanim=0;
+
+            }
+            if(GMODE[2]==2) {
+              GMODE[2]=3;
+              GINC[2]=2;				
+              POKE(53269L,PEEK(53269L)&223);
+              POKE(eyesprite[2],spritestart+19+bonuscount); 
+              bonuscount++;
+              if(bonuscount==1)score+=200;
+              if(bonuscount==2)score+=400;
+              if(bonuscount==3){
+                score+=800;
+                bonuscount=0;
+              }                        
+              tempsprite=PEEK(V+21);
+              POKE(V+21,4);
+              bigpause();
+              POKE(V+21,tempsprite);                        
+
+              //POKE(fruitsprite,fcherry=2);
+              //POKE(V+fruitsx,GGX[2]);
+              //POKE(V+fruitsy,GGY[2]);				
+            }				
+          }
 	}		
 	
 	pacmove(); // check all 4 directions of pacman	
@@ -1909,35 +1912,35 @@ while (JOYEX==0){
 	
 	
 	
-if((sectemp<40)||(sectemp>80)){
-	if(GMODE[0]==0) ghostmove(14,3,0,0);
-	if(GMODE[1]==0) ghostmove(14,20,1,0);
-	if(GMODE[2]==0) ghostmove(14,10,2,0);
-} else {
-  if(PDIR==0) if(GMODE[0]==0) ghostmove(PX,PY-3,0,0);
+          if((sectemp<40)||(sectemp>80)){
+            if(GMODE[0]==0) ghostmove(14,3,0,0);
+            if(GMODE[1]==0) ghostmove(14,20,1,0);
+            if(GMODE[2]==0) ghostmove(14,10,2,0);
+          } else {
+            if(PDIR==0) if(GMODE[0]==0) ghostmove(PX,PY-3,0,0);
 
-  if(PDIR==1)if(GMODE[0]==0) ghostmove(PX+3,PY,0,0);              
- 
-  if(PDIR==2) if(GMODE[0]==0) ghostmove(PX,PY+3,0,0);
- 
-  if(PDIR==3) if(GMODE[0]==0) ghostmove(PX-3,PY,0,0);
- 
-              
-         if(PDIR==0)  if(GMODE[1]==0) ghostmove(PX,PY-1,1,0);
-  
-         if(PDIR==1)  if(GMODE[1]==0) ghostmove(PX+1,PY,1,0);
-  
-         if(PDIR==2) if(GMODE[1]==0) ghostmove(PX,PY+1,1,0);
-  
-  	 if(PDIR==3) if(GMODE[1]==0) ghostmove(PX-1,PY,1,0);
-  
-  
-  
-  
-  
-	if(GMODE[2]==0) ghostmove(PX,PY,2,0);  
-          
-}          
+            if(PDIR==1)if(GMODE[0]==0) ghostmove(PX+3,PY,0,0);              
+
+            if(PDIR==2) if(GMODE[0]==0) ghostmove(PX,PY+3,0,0);
+
+            if(PDIR==3) if(GMODE[0]==0) ghostmove(PX-3,PY,0,0);
+
+
+            if(PDIR==0)  if(GMODE[1]==0) ghostmove(PX,PY-1,1,0);
+
+            if(PDIR==1)  if(GMODE[1]==0) ghostmove(PX+1,PY,1,0);
+
+            if(PDIR==2) if(GMODE[1]==0) ghostmove(PX,PY+1,1,0);
+
+            if(PDIR==3) if(GMODE[1]==0) ghostmove(PX-1,PY,1,0);
+
+
+
+
+
+            if(GMODE[2]==0) ghostmove(PX,PY,2,0);  
+
+          }          
           
 	if(GMODE[0]==1) ghostmove(13,10,0,0);
 	if(GMODE[0]==2) ghostmove(1,1,0,0);
@@ -2056,7 +2059,8 @@ if(MAP[20][26]==47){
 		resetghost();
 		POKE(V+21,255);
           	level=0;
- 		printstatus(0); 		
+ 		printstatus(0); 
+                bonuscount=0;
 	}
 }
   
