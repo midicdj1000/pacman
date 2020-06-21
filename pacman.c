@@ -1363,8 +1363,8 @@ int main (void)
     short int pacsound=0;
     short int flash=1;
     unsigned int SSTART=1024;
-    unsigned int JOYADDR=56321L; // port 1
-    unsigned int JOYADDR2=56320L; // port 2  
+    unsigned int JOYADDR=56320L; // port 1
+    unsigned int JOYADDR2=56321L; // port 2  
     short int JOYREAD=0;
     short int JOYREAD2=0;  
     short int JOYEX=0;
@@ -1402,11 +1402,11 @@ int main (void)
     short int CYELLOW=7;
     short int bcol=0;
 
-    short int JUP=254;
-    short int JDOWN=253;
-    short int JLEFT=251;
-    short int JRIGHT=247;
-    short int JFIRE=239;	
+    short int JUP=126;
+    short int JDOWN=125;
+    short int JLEFT=123;
+    short int JRIGHT=119;
+    short int JFIRE=111;	
     //int l;
     unsigned char *err="*";
     unsigned int dev;
@@ -2024,19 +2024,16 @@ if(MAP[20][26]==47){
 } else {
           
 	JOYREAD=0;
-	JOYREAD2=0;          
-	JOYREAD=PEEK(56321L); // check joystick
-	JOYREAD2=PEEK(56320L); // check joystick  
+	//JOYREAD2=0;          
+	JOYREAD=PEEK(JOYADDR); // check joystick
+	//JOYREAD2=PEEK(56321L); // check joystick  
 	POKE(V+21,0);
       	(void) textcolor (2);
  	printstatus(2); 	
-	if ((JOYREAD==239)||(JOYREAD2==239)){ // fire exit
-          	if(JOYREAD==239){
-                  	JOYADDR=56321l;
-                } else {
-                  	JOYADDR=56320l ;                
-                }  
-		hiscore=score;
+	if (JOYREAD==JFIRE){ // fire exit
+          	//if(JOYREAD==239) JOYADDR=56321l;
+          	//if(JOYREAD2==239) JOYADDR=56320l;
+          	hiscore=score;
         	printscore(hiscore,5);
                 deadanim=0;
                 pacmode=0;
