@@ -457,7 +457,7 @@ unsigned char spriteData[2176] = {
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x07
 };
 
- short int MAP[23][28] = {
+ unsigned char MAP[23][28] = {
 	{160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160},//0
 	{160,46 ,46 ,46 ,46 ,46 ,46 ,46 ,46 ,46 ,46 ,46 ,46 ,160,160,46 ,46 ,46 ,46 ,46 ,46 ,46 ,46 ,46 ,46 ,46 ,46 ,160},//1
 	{160,47 ,160,160,160,160,46 ,160,160,160,160,160,46 ,160,160,46 ,160,160,160,160,160,46 ,160,160,160,160,47 ,160},//2
@@ -1402,11 +1402,23 @@ int main (void)
     short int CYELLOW=7;
     short int bcol=0;
 
-    short int JUP=126;
-    short int JDOWN=125;
-    short int JLEFT=123;
-    short int JRIGHT=119;
-    short int JFIRE=111;	
+    short int JUP1=254;
+    short int JDOWN1=253;
+    short int JLEFT1=251;
+    short int JRIGHT1=247;
+    short int JFIRE1=239;
+
+    short int JUP=254;
+    short int JDOWN=253;
+    short int JLEFT=251;
+    short int JRIGHT=247;
+    short int JFIRE=239;
+  
+    short int JUP2=126;
+    short int JDOWN2=125;
+    short int JLEFT2=123;
+    short int JRIGHT2=119;
+    short int JFIRE2=111;	
     //int l;
     unsigned char *err="*";
     unsigned int dev;
@@ -2024,14 +2036,29 @@ if(MAP[20][26]==47){
 } else {
           
 	JOYREAD=0;
-	//JOYREAD2=0;          
-	JOYREAD=PEEK(JOYADDR); // check joystick
-	//JOYREAD2=PEEK(56321L); // check joystick  
+	JOYREAD2=0;          
+	JOYREAD=PEEK(56321L); // check joystick
+	JOYREAD2=PEEK(56320L); // check joystick  
 	POKE(V+21,0);
       	(void) textcolor (2);
  	printstatus(2); 	
-	if (JOYREAD==JFIRE){ // fire exit
-          	//if(JOYREAD==239) JOYADDR=56321l;
+	if ((JOYREAD==JFIRE1)||(JOYREAD2==JFIRE2)){ // fire exit
+          if(JOYREAD==JFIRE1){
+            JOYADDR=56321l;
+            JUP=JUP1;
+            JDOWN=JDOWN1;
+            JLEFT=JLEFT1;
+            JRIGHT=JRIGHT1;
+            JFIRE=JFIRE1;
+          }                  
+          if(JOYREAD2==JFIRE2){
+            JOYADDR=56320l;
+            JUP=JUP2;
+            JDOWN=JDOWN2;
+            JLEFT=JLEFT2;
+            JRIGHT=JRIGHT2;
+            JFIRE=JFIRE2;
+          } 
           	//if(JOYREAD2==239) JOYADDR=56320l;
           	hiscore=score;
         	printscore(hiscore,5);
