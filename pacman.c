@@ -449,19 +449,121 @@ unsigned int M=54272L;
 	short int eyecol[3]={39,40,41};
 	short int bonuscount=0;
     short int flashdot=0;
-
-	
+    unsigned int ghostsprite[3]={0,0,0};//3,4,5
+    unsigned int eyesprite[3]={0,0,0};//0,1,2
+    unsigned int fruitsprite=0;//7
+    short int CBLACK=0;
+    short int CWHITE=1;
+    short int CBROWN=2;
+    short int CCYAN=3;
+    short int CPURP=4;
+    short int CDGREEN=5;
+    short int CDBLUE=6;
+    short int CYELLOW=7;
+    short int bcol=0;
+    short int paccol=45;
+    short int pacsx=12;
+    short int pacsy=13;
+    short int eyesx[3]={0,2,4};
+    short int eyesy[3]={1,3,5};
+    short int ghostsx[3]={6,8,10};
+    short int ghostsy[3]={7,9,11};	
+    short int ghostflash[2]={6,0};
 	short int DOORS [5] = {0,0,0,0,0};
 	short int GDOORS [5] = {0,0,0,0,0};
 	short int GMOVE[4] = {0,0,0,0};
-
 	short int PACFRAMES[5][4]={
 	{0,0,0,0},
 	{0,0,0,0},
 	{0,0,0,0},
 	{0,0,0,0},
 	{0,0,0,0}
-};
+	};
+
+void setupsprites(void){
+  int dev=0;
+     eyesprite[0]=spritebase+2040;
+    eyesprite[1]=spritebase+2041;
+    eyesprite[2]=spritebase+2042;
+    ghostsprite[0]=spritebase+2043;
+    ghostsprite[1]=spritebase+2044;
+    ghostsprite[2]=spritebase+2045;	
+    pacsprite=spritebase+2046;	
+    fruitsprite=spritebase+2040+7;	
+
+    spritestart=spriteload/64;
+
+    fcherry=spritestart+19;
+
+    EYEANIM[0]=spritestart+11;
+    EYEANIM[1]=spritestart+11;
+    EYEANIM[2]=spritestart+11;
+
+
+    GHOSTANIM[0]=spritestart+9;
+    GHOSTANIM[1]=spritestart+9;
+    GHOSTANIM[2]=spritestart+9;	
+
+    PACFRAMES[0][0]=spritestart;
+    PACFRAMES[0][1]=spritestart+5;
+    PACFRAMES[0][2]=spritestart+6;
+    PACFRAMES[0][3]=spritestart+5;	
+    PACFRAMES[1][0]=spritestart;	
+    PACFRAMES[1][1]=spritestart+3;
+    PACFRAMES[1][2]=spritestart+4;
+    PACFRAMES[1][3]=spritestart+3;
+    PACFRAMES[2][0]=spritestart;
+    PACFRAMES[2][1]=spritestart+7;
+    PACFRAMES[2][2]=spritestart+8;	
+    PACFRAMES[2][3]=spritestart+7;	
+    PACFRAMES[3][0]=spritestart;	
+    PACFRAMES[3][1]=spritestart+1;
+    PACFRAMES[3][2]=spritestart+2;	
+    PACFRAMES[3][3]=spritestart+1;	
+    deadanim=0; 
+ 
+    for(dev=0;dev<2176;dev++){
+    POKE(spritebase+spriteload+dev,spriteData[dev]);
+  }
+
+
+
+ 
+  // 68 = spritebase+1024 / 256 
+  POKE(648,(spritebase+1024)/256);	// 
+  
+  
+  deadanim=0;
+pacmode=0;
+PACANIM=0;
+PX=13;
+PY=17;
+PGX=(PX*8)+20;
+PGY=(PY*8)+56;
+PDIR=3;
+					//collide=PEEK(53278);
+POKE(V+21,255);
+
+	//PDIR=5;
+POKE(pacsprite,PACFRAMES[PDIR][PACANIM]);
+POKE(eyesprite[0],EYEANIM[0]);
+POKE(ghostsprite[0],GHOSTANIM[0]);
+POKE(eyesprite[1],EYEANIM[1]);
+POKE(ghostsprite[1],GHOSTANIM[1]);
+POKE(eyesprite[2],EYEANIM[2]);
+POKE(ghostsprite[2],GHOSTANIM[2]);
+//POKE(fruitsprite,fcherry);
+POKE(V+paccol,CYELLOW);
+POKE(V+eyecol[0],CWHITE);
+POKE(V+ghostcol[0],3);
+POKE(V+eyecol[1],CWHITE);
+POKE(V+ghostcol[1],4);
+POKE(V+eyecol[2],CWHITE);
+POKE(V+ghostcol[2],5);
+  
+  
+}  
+
 
 void bigpause(void){
  int loop=0;
@@ -495,6 +597,29 @@ void drawintro(void){
   
   clrscr(); 
   
+  	POKE(eyesprite[0],EYEANIM[0]);
+	POKE(ghostsprite[0],GHOSTANIM[0]);
+	POKE(eyesprite[1],EYEANIM[1]);
+	POKE(ghostsprite[1],GHOSTANIM[1]);
+	POKE(eyesprite[2],EYEANIM[2]);
+	POKE(ghostsprite[2],GHOSTANIM[2]);
+
+
+	//POKE(V+pacsx,50); // draw pacman
+	//POKE(V+pacsy,50);
+	POKE(V+eyesx[0],70); // draw pacman
+	POKE(V+eyesy[0],110);
+	POKE(V+ghostsx[0],70); // draw pacman
+	POKE(V+ghostsy[0],110);	
+	POKE(V+eyesx[1],70); // draw pacman
+	POKE(V+eyesy[1],135);
+	POKE(V+ghostsx[1],70); // draw pacman
+	POKE(V+ghostsy[1],135);	
+	POKE(V+eyesx[2],70); // draw pacman
+	POKE(V+eyesy[2],85);
+	POKE(V+ghostsx[2],70); // draw pacman
+	POKE(V+ghostsy[2],85);
+  POKE(V+21,255);
  
   for(dev=0;dev<20;dev++){
    PO=1024+spritebase+dev+lin[0];
@@ -509,7 +634,7 @@ void drawintro(void){
   
     POKE(1024+spritebase+dev+lin[1],message[1][dev]);
     PO=colram-40+dev+lin[1];
-      POKE(PO,2); 
+      POKE(PO,13); 
     while (VIC.rasterline < 255) ;
   } 
    bigpause();
@@ -543,7 +668,13 @@ void drawintro(void){
     POKE(1024+spritebase+dev+lin[6],message[6][dev]);
         while (VIC.rasterline < 255) ;
   }   
-   bigpause();   
+   bigpause();
+   bigpause();
+   bigpause();
+   bigpause();  
+   bigpause();
+   bigpause();  
+  POKE(V+21,0);
 } 
 
 
@@ -1249,6 +1380,45 @@ static void pacmove(void)
 	
 }
 
+void ghostdead(int bon){
+unsigned int death1[35]={2000,2266,2532,2798,3596,3862,4128,4394,4660,4926,5192,5458,5724,5990,6256,2718,2968,3518,3638,3808,4158,4728,4398,4478,4648,2718,2968,3518,3638,3808,4158,4728,4398,4478,4648};   
+unsigned int N=2428;
+short int T=0;
+unsigned int FQ=0;
+unsigned int HF=0;
+unsigned int LF=0;  
+  
+  for(T=0;T<24;T++){
+    POKE(M+T,0);
+  } 
+  POKE(V+21,64);	  
+  POKE(M+14,140);  // voice 3 frequancy
+  POKE(M+18,16);  // voice 3 wave
+  POKE(M+24,143); // set volume and turn off voice 3
+  POKE(M+3,0);	// voice 1 pwn hi
+  POKE(M+2,192);  // voice 1 pwn low
+  POKE(M+6,240);  // voice 1 sr
+  POKE(M+5,15);   // voice 1 ad
+  POKE(M+4,65);   // voice 1 wave square  
+  for(T=0;T<15;T++){
+	//FQ=N+PEEK(M+27)*10; // peek voice 3 
+	FQ=death1[T]+bon;
+	HF=(FQ/256);
+	LF=FQ-(HF*256);
+	//death1[T]=FQ;
+	POKE(M,LF);
+	POKE(M+1,HF);
+	waitvsync();
+	waitvsync();
+	//waitvsync();  
+  	//POKE(pacsprite,deadpac[T]);  
+  } 
+  for(T=0;T<24;T++){
+    POKE(M+T,0);
+  }  
+  
+}  
+
 void pacdead(void){
 unsigned int death1[35]={6000,6200,5200,4800,4400,5200,5400,4400,4000,3600,4400,4800,3600,3200,2800,2718,2968,3518,3638,3808,4158,4728,4398,4478,4648,2718,2968,3518,3638,3808,4158,4728,4398,4478,4648};   
 short int deadpac[15]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
@@ -1372,19 +1542,11 @@ int main (void)
     unsigned int hiscore=0;
     short int dots=0;
 
-    unsigned int ghostsprite[3]={0,0,0};//3,4,5
-    unsigned int eyesprite[3]={0,0,0};//0,1,2
-    unsigned int fruitsprite=0;//7
-    short int paccol=45;
+
+
 
     short int cherrycol=46;
-    short int pacsx=12;
-    short int pacsy=13;
-    short int eyesx[3]={0,2,4};
-    short int eyesy[3]={1,3,5};
-    short int ghostsx[3]={6,8,10};
-    short int ghostsy[3]={7,9,11};	
-    short int ghostflash[2]={6,0};
+
   
     short int fruitsx=14;
     short int fruitsy=15;
@@ -1392,15 +1554,7 @@ int main (void)
     short int sectemp=0;
 
   
-    short int CBLACK=0;
-    short int CWHITE=1;
-    short int CBROWN=2;
-    short int CCYAN=3;
-    short int CPURP=4;
-    short int CDGREEN=5;
-    short int CDBLUE=6;
-    short int CYELLOW=7;
-    short int bcol=0;
+
 
     short int JUP1=254;
     short int JDOWN1=253;
@@ -1431,45 +1585,7 @@ int main (void)
 
 	
 
-    eyesprite[0]=spritebase+2040;
-    eyesprite[1]=spritebase+2041;
-    eyesprite[2]=spritebase+2042;
-    ghostsprite[0]=spritebase+2043;
-    ghostsprite[1]=spritebase+2044;
-    ghostsprite[2]=spritebase+2045;	
-    pacsprite=spritebase+2046;	
-    fruitsprite=spritebase+2040+7;	
-
-    spritestart=spriteload/64;
-
-    fcherry=spritestart+19;
-
-    EYEANIM[0]=spritestart+11;
-    EYEANIM[1]=spritestart+11;
-    EYEANIM[2]=spritestart+11;
-
-
-    GHOSTANIM[0]=spritestart+9;
-    GHOSTANIM[1]=spritestart+9;
-    GHOSTANIM[2]=spritestart+9;	
-
-    PACFRAMES[0][0]=spritestart;
-    PACFRAMES[0][1]=spritestart+5;
-    PACFRAMES[0][2]=spritestart+6;
-    PACFRAMES[0][3]=spritestart+5;	
-    PACFRAMES[1][0]=spritestart;	
-    PACFRAMES[1][1]=spritestart+3;
-    PACFRAMES[1][2]=spritestart+4;
-    PACFRAMES[1][3]=spritestart+3;
-    PACFRAMES[2][0]=spritestart;
-    PACFRAMES[2][1]=spritestart+7;
-    PACFRAMES[2][2]=spritestart+8;	
-    PACFRAMES[2][3]=spritestart+7;	
-    PACFRAMES[3][0]=spritestart;	
-    PACFRAMES[3][1]=spritestart+1;
-    PACFRAMES[3][2]=spritestart+2;	
-    PACFRAMES[3][3]=spritestart+1;	
-    deadanim=0;
+setupsprites();
 
 	
 
@@ -1483,15 +1599,7 @@ int main (void)
   dev=1;
   
  
-  for(dev=0;dev<2176;dev++){
-    POKE(spritebase+spriteload+dev,spriteData[dev]);
-  }
 
-
-
- 
-  // 68 = spritebase+1024 / 256 
-  POKE(648,(spritebase+1024)/256);	// 
  clrscr(); 
 
 
@@ -1834,8 +1942,9 @@ while (JOYEX==0){
                 bonuscount=0;
               }  
               tempsprite=PEEK(V+21); 				// store all sprits
-              POKE(V+21,1);	
-              bigpause();					// delay need to add ghost dead sfx
+              POKE(V+21,1);	// 1
+              //bigpause();
+              ghostdead(bonuscount*1000);// delay need to add ghost dead sfx
               POKE(V+21,tempsprite);                          // return sprites to before
               //POKE(fruitsprite,fcherry);
               //POKE(V+fruitsx,GGX[0]);
@@ -1862,8 +1971,9 @@ while (JOYEX==0){
                 bonuscount=0;
               }  
               tempsprite=PEEK(V+21);
-              POKE(V+21,2);
-              bigpause();
+              POKE(V+21,2); // 2
+              //bigpause();
+              ghostdead(bonuscount*1000);
               POKE(V+21,tempsprite);                        
               //POKE(fruitsprite,fcherry+1);
               //POKE(V+fruitsx,GGX[1]);
@@ -1889,8 +1999,9 @@ while (JOYEX==0){
                 bonuscount=0;
               }                        
               tempsprite=PEEK(V+21);
-              POKE(V+21,4);
-              bigpause();
+              POKE(V+21,4);  // 4
+              //bigpause();
+              ghostdead(bonuscount*1000);
               POKE(V+21,tempsprite);                        
 
               //POKE(fruitsprite,fcherry=2);
@@ -2030,13 +2141,37 @@ if(MAP[20][26]==47){
   
 } else {
           
+dottemp++;           
+
+if (dottemp>20){
+  flashdot++;
+  dottemp=0;
+  sectemp++;
+  if(sectemp>120){
+    sectemp=0;
+  }  
+}
+  
+if(flashdot==2)flashdot=0;
+          
+       
+  scrchr=colram+(2*40)+(1);
+  POKE(scrchr,dotscol[flashdot]);	
+  scrchr=colram+(2*40)+(26);
+  POKE(scrchr,dotscol[flashdot]);	
+  scrchr=colram+(20*40)+(1);
+  POKE(scrchr,dotscol[flashdot]);	
+  scrchr=colram+(20*40)+(26);
+  POKE(scrchr,dotscol[flashdot]);	
+           
 	JOYREAD=0;
 	JOYREAD2=0;          
 	JOYREAD=PEEK(56321L); // check joystick
 	JOYREAD2=PEEK(56320L); // check joystick  
 	POKE(V+21,0);
       	(void) textcolor (2);
- 	printstatus(2); 	
+ 	printstatus(2); 
+          
 	if ((JOYREAD==JFIRE1)||(JOYREAD2==JFIRE2)){ // fire exit
           if(JOYREAD==JFIRE1){
             JOYADDR=56321l;
