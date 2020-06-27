@@ -585,13 +585,13 @@ void drawintro(void){
   char message[7][20]={
     {3,8,1,18,1,3,20,5,18,32,47,32,14,9,3,11,14,1,13,5},
     {45,32,19,9,4,32,32,32,32,32,32,32,1,32,32,32,32,32,32,32},
-    {45,32,3,9,4,32,32,32,32,32,32,32,1,32,32,32,32,32,32,32},
+    {45,32,22,9,3,32,32,32,32,32,32,32,1,32,32,32,32,32,32,32},
     {45,32,3,9,1,32,32,32,32,32,32,32,1,32,32,32,32,32,32,32},   
     {32,32,32,32,32,32,64,32,49,48,32,125,126,32,32,32,32,32,32,32},   
     {32,32,32,32,32,32,81,32,53,48,32,125,126,32,32,32,32,32,32,32},  
     {32,32,12,5,5,32,19,13,9,20,8,32,32,50,48,50,48,32,32,32}
   };
-  short int lin[7]={130,210,330,450,610,690,890};
+  short int lin[7]={135,215,335,455,610,690,890};
   
        //(void) textcolor (1); 
   
@@ -607,21 +607,24 @@ void drawintro(void){
 
 	//POKE(V+pacsx,50); // draw pacman
 	//POKE(V+pacsy,50);
-	POKE(V+eyesx[0],70); // draw pacman
+	POKE(V+eyesx[0],11); // draw pacman
 	POKE(V+eyesy[0],110);
-	POKE(V+ghostsx[0],70); // draw pacman
+	POKE(V+ghostsx[0],10); // draw pacman
 	POKE(V+ghostsy[0],110);	
-	POKE(V+eyesx[1],70); // draw pacman
+	POKE(V+eyesx[1],10); // draw pacman
 	POKE(V+eyesy[1],135);
-	POKE(V+ghostsx[1],70); // draw pacman
+	POKE(V+ghostsx[1],10); // draw pacman
 	POKE(V+ghostsy[1],135);	
-	POKE(V+eyesx[2],70); // draw pacman
+	POKE(V+eyesx[2],10); // draw pacman
 	POKE(V+eyesy[2],85);
-	POKE(V+ghostsx[2],70); // draw pacman
+	POKE(V+ghostsx[2],10); // draw pacman
 	POKE(V+ghostsy[2],85);
   POKE(V+21,255);
+  
+  
  
-  for(dev=0;dev<20;dev++){
+  for(dev=0;dev<10;dev++){
+   
    PO=1024+spritebase+dev+lin[0];
     POKE(PO,message[0][dev]);
     PO=colram-40+dev+lin[0];
@@ -630,8 +633,11 @@ void drawintro(void){
   } 
    bigpause();
 
-  for(dev=0;dev<20;dev++){
-  
+  for(dev=0;dev<10;dev++){
+ 	POKE(V+eyesx[2],10+dev*10); // draw pacman
+	POKE(V+eyesy[2],85);
+	POKE(V+ghostsx[2],10+dev*10); // draw pacman
+	POKE(V+ghostsy[2],85); 
     POKE(1024+spritebase+dev+lin[1],message[1][dev]);
     PO=colram-40+dev+lin[1];
       POKE(PO,13); 
@@ -639,13 +645,21 @@ void drawintro(void){
   } 
    bigpause();
 
-  for(dev=0;dev<20;dev++){
+  for(dev=0;dev<10;dev++){
+     	POKE(V+eyesx[0],10+dev*10); // draw pacman
+	POKE(V+eyesy[0],110);
+	POKE(V+ghostsx[0],10+dev*10); // draw pacman
+	POKE(V+ghostsy[0],110);	
         POKE(colram-40+dev+lin[2],3);     
     POKE(1024+spritebase+dev+lin[2],message[2][dev]);
       while (VIC.rasterline < 255) ;  
   }   
    bigpause();  
-  for(dev=0;dev<20;dev++){
+  for(dev=0;dev<10;dev++){
+ 	POKE(V+eyesx[1],10+dev*10); // draw pacman
+	POKE(V+eyesy[1],135);
+	POKE(V+ghostsx[1],10+dev*10); // draw pacman
+	POKE(V+ghostsy[1],135);   
         POKE(colram-40+dev+lin[3],4);     
     POKE(1024+spritebase+dev+lin[3],message[3][dev]);
       while (VIC.rasterline < 255) ;  
@@ -1391,7 +1405,7 @@ unsigned int LF=0;
   for(T=0;T<24;T++){
     POKE(M+T,0);
   } 
-  POKE(V+21,64);	  
+  //POKE(V+21,64);	  
   POKE(M+14,140);  // voice 3 frequancy
   POKE(M+18,16);  // voice 3 wave
   POKE(M+24,143); // set volume and turn off voice 3
@@ -1408,14 +1422,16 @@ unsigned int LF=0;
 	//death1[T]=FQ;
 	POKE(M,LF);
 	POKE(M+1,HF);
-	waitvsync();
-	waitvsync();
+      	while (VIC.rasterline < 255) ;
+	//waitvsync();
+	//waitvsync();
 	//waitvsync();  
   	//POKE(pacsprite,deadpac[T]);  
   } 
   for(T=0;T<24;T++){
     POKE(M+T,0);
-  }  
+  } 
+  for (T=0;T<5;T++) 	while (VIC.rasterline < 255) ;
   
 }  
 
