@@ -1748,7 +1748,7 @@ while (JOYEX==0){
           for(Xcount=0;Xcount<3;Xcount++){
             if (GMODE[Xcount]==2){  		// if ghost = blue
               gtimer[Xcount]++;			// inc how long = blue
-              if (gtimer[Xcount]>250){		// make flash as it gets to the end
+              if (gtimer[Xcount]>200){		// make flash as it gets to the end
 
                 //if(gtimer[Xcount] %2==0){	// flash odd and even
                   POKE(V+ghostcol[Xcount],ghostflash[flashdot]);
@@ -2033,7 +2033,7 @@ while (JOYEX==0){
 	
 	
 	
-          if((sectemp<40)||(sectemp>80)){			// timer = scatter mode
+          if((sectemp<30)||(sectemp>60)){			// timer = scatter mode
             if(GMODE[0]==0) ghostmove(14,3,0,0);		// top section
             if(GMODE[1]==0) ghostmove(14,20,1,0);		// bottomo section
             if(GMODE[2]==0) ghostmove(14,10,2,0);		// middle section
@@ -2129,7 +2129,7 @@ if (dottemp>10){
   flashdot++;
   dottemp=0;
   sectemp++;
-  if(sectemp>120){
+  if(sectemp>90){
     sectemp=0;
   }  
 }
@@ -2223,7 +2223,7 @@ if(flashdot==2)flashdot=0;
 		drawdots(7);
 		printstatus(1); 
 		drawlife(paclife); 
-		//startmusic();
+		startmusic();
 		resetghost();
 		POKE(V+21,255);
           	level=0;
