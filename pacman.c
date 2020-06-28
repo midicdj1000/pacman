@@ -2213,6 +2213,7 @@ if(flashdot==2)flashdot=0;
                 deadanim=0;
                 pacmode=0;
                 PACANIM=0;
+              	sectemp=0;
                 PX=13;
                 PY=17;
                 PGX=(PX*8)+20;
