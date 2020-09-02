@@ -11,8 +11,16 @@
 
 unsigned long count=0;
 unsigned int base=8192;
-
-
+char nib1=0;
+char nib2=0;
+char nib3=0;
+char nib4=0;
+char nib5=0;
+char nib6=0;
+char nib7=0;
+char nib8=0;
+char nibout=0;
+char newpix=0;
 
 unsigned char sprite[384] = {
 	0x00, 0x28, 0x00, 0x00, 0x82, 0x00, 0x02, 0x00, 0x80,
@@ -51,21 +59,21 @@ unsigned char sprite[384] = {
 };
 
 
-unsigned char tile1[576] ={
+unsigned char tile1[640] ={
 0,0,0,0,2,10,42,170,2,10,42,170,170,170,170,170,128,160,168,170,170,170,170,170,0,0,0,0,128,160,168,170,
 170,42,10,2,0,0,0,0,170,170,170,170,170,42,10,2,170,170,170,170,170,168,160,128,170,168,160,128,0,0,0,0,
   
-0,0,0,0,2,10,17,145,2,10,42,170,170,170,170,170,128,160,168,170,170,170,170,170,0,0,0,0,128,160,168,170,
-145,17,10,2,0,0,0,0,170,170,170,170,170,42,10,2,170,170,170,170,170,168,160,128,170,168,160,128,0,0,0,0,
+0,0,0,0,2,10,17,157,2,10,42,170,170,170,170,170,128,160,168,170,170,170,170,170,0,0,0,0,128,160,168,170,
+157,17,10,2,0,0,0,0,170,170,170,170,170,42,10,2,170,170,170,170,170,168,160,128,170,168,160,128,0,0,0,0,
   
 0,0,0,0,2,10,42,170,2,9,39,169,170,170,170,170,128,96,216,106,170,170,170,170,0,0,0,0,128,160,168,170,
 170,42,10,2,0,0,0,0,170,170,170,170,170,42,10,2,170,170,170,170,170,168,160,128,170,168,160,128,0,0,0,0,
   
-0,0,0,0,2,10,42,170,2,10,42,170,170,170,170,170,128,160,168,170,170,170,170,170,0,0,0,0,128,160,152,70,
-170,42,10,2,0,0,0,0,170,170,170,170,170,42,10,2,170,170,170,170,170,168,160,128,70,152,160,128,0,0,0,0,
+0,0,0,0,2,10,42,170,2,10,42,170,170,170,170,170,128,160,168,170,170,170,170,170,0,0,0,0,128,160,152,118,
+170,42,10,2,0,0,0,0,170,170,170,170,170,42,10,2,170,170,170,170,170,168,160,128,118,152,160,128,0,0,0,0,
   
 0,0,0,0,2,10,42,170,2,10,42,170,170,170,170,170,128,160,168,170,170,170,170,170,0,0,0,0,128,160,168,170,
-170,42,10,2,0,0,0,0,170,170,170,170,169,36,9,2,170,170,170,170,106,24,96,128,170,168,160,128,0,0,0,0,
+170,42,10,2,0,0,0,0,170,170,170,170,169,39,9,2,170,170,170,170,106,216,96,128,170,168,160,128,0,0,0,0,
   
 0,0,0,0,2,10,42,170,2,10,42,170,106,154,166,169,128,160,168,170,169,166,154,106,0,0,0,0,128,160,168,170,
 170,42,10,2,0,0,0,0,169,166,154,106,170,42,10,2,106,154,166,169,170,168,160,128,170,168,160,128,0,0,0,0,  
@@ -77,7 +85,10 @@ unsigned char tile1[576] ={
 170,42,10,2,0,0,0,0,169,166,154,106,170,42,10,2,170,170,170,170,170,168,160,128,170,168,160,128,0,0,0,0,
 
 0,0,0,0,2,10,42,170,2,10,42,170,106,154,166,169,128,160,168,170,170,170,170,170,0,0,0,0,128,160,168,170,
-170,42,10,2,0,0,0,0,169,166,154,106,170,42,10,2,170,170,170,170,170,168,160,128,170,168,160,128,0,0,0,0,  
+170,42,10,2,0,0,0,0,169,166,154,106,170,42,10,2,170,170,170,170,170,168,160,128,170,168,160,128,0,0,0,0, 
+  
+0,0,0,0,1,5,21,85 ,1,5,21,85,85,85,85,85, 64,80,84,85,85,85,85,85, 0,0,0,0,64,80,84,85,
+85,21,5,1,0,0,0,0, 85,85,85,85,85,21,5,1, 85,85,85,85,85,84,80,64, 85,84,80,64,0,0,0,0  
 };
  
 
@@ -86,7 +97,7 @@ unsigned char map[9][9]= {
   {1,1,1,1,1,1,1,1,1},
   {1,1,1,1,1,1,1,1,1},
   {1,1,1,1,1,1,1,1,1},
-  {1,1,1,1,5,1,1,1,1},
+  {1,1,1,1,1,1,1,1,1},
   {1,1,1,1,1,1,1,1,1},
   {1,1,1,1,1,1,1,1,1},
   {1,1,1,1,1,1,1,1,1},
@@ -142,17 +153,60 @@ void placetile2(int x,int y, int tile){
   int ttile=0;
   short oldpix=0;
   short oldpix2=0;  
-  short newpix=0;
+
   short newpix2=0;  
-  char oldbit[8],newbit[8];
+  short temp=0;
+  short temp2=0;
+  short output=0;
+  //char oldbit[8],newbit[8];
   int count=0;
   int bits=128;
   y=y*320;
   
 x=x*16;
+  ttile=(tile-1)*64; 
+  for (counter=0;counter<32;counter++){
+    pos=8192+320+counter+x+y;
+
+
+      oldpix=PEEK(pos); 
+     newpix=tile1[ttile+counter+32];  
+nib1=newpix&192;
+nib2=oldpix&192;
+output=0;  
+if(nib1==0){
+ output+=nib2;
+} else {
+  output+=nib1;
+}
+nib3=newpix&48;
+nib4=oldpix&48;
+if(nib3==0){
+ output+=nib4;
+} else {
+  output+=nib3;
+}  
+nib5=newpix&12;
+nib6=oldpix&12;
+if(nib5==0){
+ output+=nib6;
+} else {
+  output+=nib5;
+} 
+nib7=newpix&3;
+nib8=oldpix&3;
+if(nib7==0){
+ output+=nib8;
+} else {
+  output+=nib7;
+}  
+nibout=output;
+POKE(pos,output) ;
+//POKE(pos+640,oldpix) ;
+//POKE(pos+640+640,newpix) ;    
+ }   
 for (counter=0;counter<32;counter++){
     pos=8192+counter+x+y;
-  ttile=(tile-1)*64;
   //if(tile1[ttile+counter]!=0){
   	//POKE(pos,PEEK(pos)&tile1[ttile+counter]); // and
    	//POKE(pos+320,PEEK(pos+320)&tile1[ttile+counter+32]); // and   
@@ -165,82 +219,42 @@ for (counter=0;counter<32;counter++){
 //if(newpix==0){
 //;;      POKE(pos,oldpix);
 //} else {
-  
-  
-for(count=0;oldpix>0;count++){
-  oldbit[count]=0;
-  newbit[count]=0;
-  oldbit[count]=oldpix%2;
-  newbit[count]=newpix%2;
-  oldpix=oldpix/2;
-  newpix=newpix/2;
+output=0;  
+temp=newpix&192;
+temp2=oldpix&192;
+if(temp==0){
+ output+=temp2;
+} else {
+  output+=temp;
 }
-if((newbit[0]==0)&&(newbit[1]==0)){
-  newbit[0]=oldbit[0];
-  newbit[1]=oldbit[1];
-}
-if((newbit[2]==0)&&(newbit[3]==0)){
-  newbit[2]=oldbit[2];
-  newbit[3]=oldbit[3];
-}
-if((newbit[4]==0)&&(newbit[5]==0)){
-  newbit[4]=oldbit[4];
-  newbit[5]=oldbit[5];
-}
-if((newbit[6]==0)&&(newbit[7]==0)){
-  newbit[6]=oldbit[6];
-  newbit[7]=oldbit[7];
-}
-  newpix=0;
-  bits=128;
-for(count=8;count>0;count--){
-  if(newbit[count-1]==1){
-    newpix+=bits;
-
-  }
-      bits=bits/2;
+temp=newpix&48;
+temp2=oldpix&48;
+if(temp==0){
+ output+=temp2;
+} else {
+  output+=temp;
 }  
-      POKE(pos,newpix);
-//}  
-      oldpix=PEEK(pos+320); 
-     newpix=tile1[ttile+counter+32];  
-//if(newpix==0){
-//      POKE(pos+320,oldpix);  
-//} else {  
-for(count=0;oldpix>0;count++){
-  oldbit[count]=0;
-  newbit[count]=0;
-  oldbit[count]=oldpix%2;
-  newbit[count]=newpix%2;
-  oldpix=oldpix/2;
-  newpix=newpix/2;
-}
-if((newbit[0]==0)&&(newbit[1]==0)){
-  newbit[0]=oldbit[0];
-  newbit[1]=oldbit[1];
-}
-if((newbit[2]==0)&&(newbit[3]==0)){
-  newbit[2]=oldbit[2];
-  newbit[3]=oldbit[3];
-}
-if((newbit[4]==0)&&(newbit[5]==0)){
-  newbit[4]=oldbit[4];
-  newbit[5]=oldbit[5];
-}
-if((newbit[6]==0)&&(newbit[7]==0)){
-  newbit[6]=oldbit[6];
-  newbit[7]=oldbit[7];
-}
-  newpix=0;
-  bits=128;
-for(count=8;count>0;count--){
-  if(newbit[count-1]==1){
-    newpix+=bits;
+temp=newpix&12;
+temp2=oldpix&12;
+if(temp==0){
+ output+=temp2;
+} else {
+  output+=temp;
+} 
+temp=newpix&3;
+temp2=oldpix&3;
+if(temp==0){
+ output+=temp2;
+} else {
+  output+=temp;
+}  
+newpix=output;
+POKE(pos,newpix);  
+  
 
-  }
-      bits=bits/2;
+//}  
+
 }   
-POKE(pos+320,newpix);
 //}
    	//POKE(pos,tile1[ttile+counter]); // over write
       	//POKE(pos+320,tile1[ttile+counter+32]); 
@@ -251,7 +265,7 @@ POKE(pos+320,newpix);
   //POKE(pos+320,PEEK(pos+320)|tile1[ttile+counter+32]); // or
 
 }  
-}  
+ 
 
 
 void main(void) {
@@ -268,6 +282,15 @@ void main(void) {
   	int spritey=0;
 	int x=0;
 	int y=1;
+ 	int curtile=1;
+  nib1=0;
+  nib2=0;
+ nib3=0;
+ nib4=0;
+ nib5=0;
+ nib6=0;
+ nib7=0;
+ nib8=0; 
   
   	clrscr();
 	poke(53265L,peek(53265L)|32);// set memory address
@@ -282,7 +305,7 @@ void main(void) {
            }
   for (count=0;count<1000;count++){
                 POKE(count+1024,117); // 1100 =12 1110 =14
-    		POKE(count+55296L,12);
+    		POKE(count+55296L,0);
   	} 
   for(x=0;x<9;x++){
     for(y=0;y<9;y++){
@@ -302,16 +325,23 @@ void main(void) {
   POKE(53287L,13);	// this prite unique colour
   x=4;
   y=4;
+  placetile(1,1,1);
  while(JOYEX==0){ 
   	JOYREAD=0;	
 	JOYREAD=PEEK(JOYADDR); // check joystick	
+   if(kbhit()!=0){
+     curtile++;
+     if(curtile>10)curtile=1;
+       placetile2(1,1,curtile);
+   }  
 	if ((JOYREAD&JFIRE)==JOYREAD){ // fire exit
 		map[y][x]++;
            waitvsync(); 
           waitvsync();  
           waitvsync();  
-          if(map[y][x]>9)map[y][x]=1;
-       placetile2(isox[y][x],isoy[y][x],map[y][x]);         
+          map[y][x]=curtile;
+       placetile2(isox[y][x],isoy[y][x],map[y][x]);
+          
 	}
   		if ((JOYREAD&JUP)==JOYREAD ){// UP
 			x++;
